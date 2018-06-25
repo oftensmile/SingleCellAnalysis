@@ -6,11 +6,12 @@ from multiprocessing import Pool
 import multiprocessing
 import os
 import tkinter.filedialog
-from tkinter import *
+import tkinter
 
 
-def func(filename, start_index, end_index):
+def get_sparse(filename, start_index, end_index):
     test = []
+    period = 1000
     with open(filename, encoding = 'UTF-8') as content:
         for i, line in enumerate(content):
             if(i >= start_index and i < end_index):
@@ -18,13 +19,16 @@ def func(filename, start_index, end_index):
                 temp = sparse.csr_matrix(line[1:], dtype=float)
                 temp.eliminate_zeros()
                 test.append(temp)
-            elif(i == end_index):
+                if(i % period == 1):
+                    test = [sparse.vstack(test)]
+            elif(i >= end_index):
                 break
-    x = sparse.vstack(test)
-    return x
+    test = sparse.vstack(test)
+
+    return test
 
 
-def demo(fn):
+def compress_file(fn):
     filename = fn
     num_lines = sum(1 for line in open(filename, encoding='UTF-8'))
     dvide = multiprocessing.cpu_count()
@@ -38,22 +42,23 @@ def demo(fn):
     p = Pool(dvide)
     res_l =[]
     for i in range(dvide):
-        res = p.apply_async(func, args=(filename, index[i], index[i+1]))
+        res = p.apply_async(get_sparse, args=(filename, index[i], index[i+1]))
         res_l.append(res)
     p.close()
     p.join()
 
     x = []
     for i in range(dvide):
-        tmp = res_l[i].get()
-        x.append(tmp)
-    
+        x.append(res_l[i].get())
+
     data = sparse.vstack(x)
+    del res_l
+    del x
     sparse.save_npz(filename.split('.')[0] + '.npz',  data.tocsc())
 
 
 def get_file():
-    root = Tk()
+    root = tkinter.Tk()
     default_dir = r"C:\Users\Minjie LYU\Desktop\benchmark"  # default dir
     fname = tkinter.filedialog.askopenfilename(title=u"Chose a File",
                                      initialdir=(os.path.expanduser(default_dir)))
@@ -63,12 +68,12 @@ def get_file():
 
 def main():
     fn = get_file()
-    num = 3
+    num = 1
     print('num', num)
     s = time.time()
     l = time.time()
     for _ in range(num):
-        demo(fn)
+        compress_file(fn)
         print(time.time() - l)
         l = time.time()
     e = time.time()
