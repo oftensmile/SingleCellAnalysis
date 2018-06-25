@@ -1,5 +1,6 @@
 import time
 from scipy import sparse
+import multiprocessing
 from multiprocessing import Pool
 import os
 import tkinter.filedialog
@@ -22,18 +23,17 @@ def get_data2(content):
         indptr.append(indptr[-1] + count)
     return indptr, indices, data
 
+
 def demo(fn):
-    start = time.time()
     data_set = []
     f = open(fn, encoding='UTF-8')
 
     content = f.readlines()
     columns_head = content[0].replace('\n', '').split(',')
     content = content[1:]
-    rows_head = []
     shape = [len(content), len(columns_head) - 1]
     
-    divide = 4
+    divide = multiprocessing.cpu_count()
     length = len(content) // divide
     for i in range(divide - 1):
         data_set.append(content[i * length: (i+1) * length])
@@ -51,7 +51,6 @@ def demo(fn):
     indptr = [0]
     indices = []
     data = []
-    statistic_row = []
     for i in range(divide):
         a, b, c= res_l[i].get()
         indptr.extend([n + indptr[-1] for n in a[1:]])
@@ -59,7 +58,6 @@ def demo(fn):
         data.extend(c)
 
     c = sparse.csr_matrix((data, indices, indptr), shape=shape)
-    print(time.time() - start)
 
     sparse.save_npz('csc_sparse.npz', c)
 
@@ -73,37 +71,20 @@ def get_file():
     return fname
 
 
-
-
 def main():
     fn = get_file()
     num = 3
     print('num', num)
     s = time.time()
+    l = time.time()
     for _ in range(num):
         demo(fn)
+        print(time.time() - l)
+        l = time.time()
     e = time.time()
 
     print('average time', (e-s)/num)
-
     print('total time', e-s)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 if __name__ == '__main__':

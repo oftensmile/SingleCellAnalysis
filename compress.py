@@ -68,7 +68,7 @@ def get_file():
 
 def main():
     fn = get_file()
-    num = 1
+    num = 3
     print('num', num)
     s = time.time()
     l = time.time()
