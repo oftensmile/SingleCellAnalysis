@@ -3,11 +3,15 @@ import numpy as np
 import time
 from scipy import sparse
 from multiprocessing import Pool
+import multiprocessing
+import os
+import tkinter.filedialog
+from tkinter import *
 
 
 def func(filename, start_index, end_index):
     test = []
-    with open(filename) as content:
+    with open(filename, encoding = 'UTF-8') as content:
         for i, line in enumerate(content):
             if(i >= start_index and i < end_index):
                 line = line.replace('\n', '').split(',')
@@ -22,25 +26,25 @@ def func(filename, start_index, end_index):
 
 def demo(fn):
     filename = fn
-    num_lines = sum(1 for line in open(filename))
-
-    length = num_lines // 4
+    num_lines = sum(1 for line in open(filename, encoding='UTF-8'))
+    dvide = multiprocessing.cpu_count()
+    length = num_lines // dvide
     index = []
-    for i in range(4):
+    for i in range(dvide):
         index.append(length * i)
     index.append(num_lines)
     index[0]=1
 
-    p = Pool(4)
+    p = Pool(dvide)
     res_l =[]
-    for i in range(4):
-        res = p.apply_async(func, args=('original.csv', index[i], index[i+1]))
+    for i in range(dvide):
+        res = p.apply_async(func, args=(filename, index[i], index[i+1]))
         res_l.append(res)
     p.close()
     p.join()
 
     x = []
-    for i in range(4):
+    for i in range(dvide):
         tmp = res_l[i].get()
         x.append(tmp)
     
@@ -48,13 +52,23 @@ def demo(fn):
     sparse.save_npz(filename.split('.')[0] + '.npz',  data.tocsc())
 
 
+def get_file():
+    root = Tk()
+    default_dir = r"C:\Users\Minjie LYU\Desktop\benchmark"  # default dir
+    fname = tkinter.filedialog.askopenfilename(title=u"Chose a File",
+                                     initialdir=(os.path.expanduser(default_dir)))
+    root.destroy()
+    return fname
+
+
 def main():
+    fn = get_file()
     num = 3
     print('num', num)
     s = time.time()
     l = time.time()
     for _ in range(num):
-        demo('original.csv')
+        demo(fn)
         print(time.time() - l)
         l = time.time()
     e = time.time()
