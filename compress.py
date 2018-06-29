@@ -5,8 +5,7 @@ from scipy import sparse
 from multiprocessing import Pool
 import multiprocessing
 import os
-import tkinter.filedialog
-import tkinter
+import util
 
 
 def get_sparse(filename, start_index, end_index):
@@ -57,17 +56,8 @@ def compress_file(fn):
     sparse.save_npz(filename.split('.')[0] + '.npz',  data.tocsc())
 
 
-def get_file():
-    root = tkinter.Tk()
-    default_dir = r"C:\Users\Minjie LYU\Desktop\benchmark"  # default dir
-    fname = tkinter.filedialog.askopenfilename(title=u"Chose a File",
-                                     initialdir=(os.path.expanduser(default_dir)))
-    root.destroy()
-    return fname
-
-
 def main():
-    fn = get_file()
+    fn = util.get_file()
     num = 3
     print('num', num)
     s = time.time()

@@ -3,8 +3,7 @@ from scipy import sparse
 import multiprocessing
 from multiprocessing import Pool
 import os
-import tkinter.filedialog
-from tkinter import *
+import util
 
 
 def get_data2(content):
@@ -13,7 +12,12 @@ def get_data2(content):
     data = []
     for line in content:
         line = line.replace('\n', '').split(',')
-        temp = ([float(i) for i in line[1:]])
+        try:
+            temp = ([float(i) for i in line[1:]])
+        except Exception as _:
+            print(line)
+            exit(1)
+
         count = 0
         for i in range(len(temp)):   
             if temp[i] != 0:
@@ -24,9 +28,10 @@ def get_data2(content):
     return indptr, indices, data
 
 
-def demo(fn):
+def compress_file(fn):
     data_set = []
     f = open(fn, encoding='UTF-8')
+    print(fn)
 
     content = f.readlines()
     columns_head = content[0].replace('\n', '').split(',')
@@ -58,27 +63,21 @@ def demo(fn):
         data.extend(c)
 
     c = sparse.csr_matrix((data, indices, indptr), shape=shape)
-
-    sparse.save_npz('csc_sparse.npz', c)
-
-
-def get_file():
-    root = Tk()
-    default_dir = r"C:\Users\Minjie LYU\Desktop\benchmark"  # default dir
-    fname = tkinter.filedialog.askopenfilename(title=u"Chose a File",
-                                     initialdir=(os.path.expanduser(default_dir)))
-    root.destroy()
-    return fname
+    sparse.save_npz('csr_sparse.npz', c)
+    coo = c.tocoo()
+    sparse.save_npz('coo_sparse.npz', coo)
+    csc = c.tocsc()
+    sparse.save_npz('csc_sparse.npz', csc)
 
 
 def main():
-    fn = get_file()
-    num = 3
+    fn = util.get_file()
+    num = 1
     print('num', num)
     s = time.time()
     l = time.time()
     for _ in range(num):
-        demo(fn)
+        compress_file(fn)
         print(time.time() - l)
         l = time.time()
     e = time.time()
