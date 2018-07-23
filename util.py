@@ -2,10 +2,9 @@ import tkinter.filedialog
 import tkinter
 
 
-def get_file():
+def get_file(title="Chose a File"):
     root = tkinter.Tk()
-    # default_dir = r"C:\Users\"  # default dir
-    fname = tkinter.filedialog.askopenfilename(title=u"Chose a File")
+    fname = tkinter.filedialog.askopenfilename(title=title)
     root.destroy()
     return fname
 

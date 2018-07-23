@@ -54,11 +54,12 @@ def compress_file(fn):
     del res_l
     del x
     sparse.save_npz(filename.split('.')[0] + '.npz',  data.tocsc())
+    return filename.split('.')[0] + '.npz'
 
 
 def main():
     fn = util.get_file()
-    num = 3
+    num = 1
     print('num', num)
     s = time.time()
     l = time.time()
