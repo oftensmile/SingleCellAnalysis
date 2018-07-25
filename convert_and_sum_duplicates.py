@@ -3,7 +3,7 @@ import time
 import convert_mappings
 import compress
 import save_row_head
-import convert_npz_to_csv
+import convert_sparse_to_csv
 import scipy
 from scipy import sparse
 import numpy as np
@@ -43,7 +43,9 @@ def main():
         h.write(str(row_heads)[1:-1].replace('\'', '').replace(', ', '\n'))
 
     sparse.save_npz(dup_npz, mat)
-    convert_npz_to_csv.npz_to_csv(dup_npz, dup_row)
+    # convert_sparse_to_csv.npz_to_csv(dup_npz, dup_row)
+    spr, row_head, _, output_file = convert_sparse_to_csv.get_data_from_files(dup_npz, dup_row, isMtx=False)
+    convert_sparse_to_csv.sparse_to_csv(spr, row_head, output_file)
 
 
 def list_duplicates(seq):

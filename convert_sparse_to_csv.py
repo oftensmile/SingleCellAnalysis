@@ -12,7 +12,10 @@ def sparse_to_csv(spr, row_heads, output_file):
 
 
 def get_data_from_files(file_name, file_row_head='genes.tsv', file_barcodes=None, isMtx=True):
-    output_file = str(file_name.split('.')[:-1])[2:-2]
+    if isMtx:
+        output_file = str(file_name.split('.')[:-1])[2:-2]
+    else:
+        output_file = str(file_name.split('.')[:-1])[2:-2] + '.csv'
 
     if isMtx:
         spr = sp.csr_matrix(scipy.io.mmread(file_name), dtype=int)
@@ -23,10 +26,13 @@ def get_data_from_files(file_name, file_row_head='genes.tsv', file_barcodes=None
         with open(file_barcodes) as bar:
             barcodes = list(map(lambda x: x.replace('\n', ''), bar.readlines()))
     else:
-        barcodes = list(range(spr.shape[1]+1))
+        barcodes = None
 
     with open(file_row_head) as rh:
-        row_heads = list(map(lambda x: x.replace('\n', '').split('\t')[1], rh.readlines()))
+        if isMtx:
+            row_heads = list(map(lambda x: x.replace('\n', '').split('\t')[1], rh.readlines()))
+        else:
+            row_heads = list(map(lambda x: x.replace('\n', ''), rh.readlines()))
 
     return spr, row_heads, barcodes, output_file
 
