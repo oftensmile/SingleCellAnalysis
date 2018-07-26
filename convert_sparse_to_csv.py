@@ -5,7 +5,7 @@ import time
 
 def sparse_to_csv(spr, row_heads, output_file):
     with open(output_file, 'w') as f:
-        f.write('Index,' + str(list(range(1, spr.shape[1]+1)))[1:-1].replace(' ', '') + '\n')
+        f.write('Index,' + str(list(range(1, spr.shape[1])))[1:-1].replace(' ', '') + '\n')
 
         for i in range(spr.shape[0]):
             f.write('#' + row_heads[i] + str(spr.getrow(i).toarray()[0].tolist())[1:-1].replace(' ', '') + '\n')
@@ -47,7 +47,7 @@ def find_splits(barcodes):
     return splits
 
 
-def split_and_convert(spr, row_heads, barcodes, output_file):
+def split_and_convert(spr, row_heads, barcodes, output_file='output'):
     splits = find_splits(barcodes)
     length = len(splits)
     for s in range(length):
