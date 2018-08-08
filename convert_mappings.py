@@ -10,12 +10,14 @@ def convert_mappings(input_file, mappings_file, from_map_id=0, to_map_id=1):
         delimeter = '\t'
 
     with open(mappings_file) as mappings:
-        m = list(map(lambda x : x.replace('\n', '').split(delimeter), mappings.readlines()))[1:]
+        m = list(map(lambda x : x.replace('\n', '').split(delimeter), mappings.readlines()))
 
     from_map = [line[from_map_id] for line in m]
     to_map = [line[to_map_id] for line in m]
 
     with open(output_file, 'w') as output:
+        with open(input_file) as data:
+            output.write('Index,' + str(list(range(1, len(data.readline().split(',')))))[1:-1].replace(' ', '') + '\n')
         with open(input_file) as data:
             err = 0
             for row in data:
@@ -24,8 +26,9 @@ def convert_mappings(input_file, mappings_file, from_map_id=0, to_map_id=1):
                     x[0] = to_map[from_map.index(x[0])]
                     output.write(str(x).replace('\'', '').replace(' ', '')[1:-1] + '\n')
                 except ValueError:
-                    output.write(row)
+                    # output.write(row)
                     err += 1
+                    print(x[0])
                     continue
     
     print(err)

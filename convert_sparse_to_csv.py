@@ -8,7 +8,8 @@ def sparse_to_csv(spr, row_heads, output_file):
         f.write('Index,' + str(list(range(1, spr.shape[1])))[1:-1].replace(' ', '') + '\n')
 
         for i in range(spr.shape[0]):
-            f.write('#' + row_heads[i] + str(spr.getrow(i).toarray()[0].tolist())[1:-1].replace(' ', '') + '\n')
+            # f.write('#' + row_heads[i] + str(spr.getrow(i).toarray()[0].tolist())[1:-1].replace(' ', '') + '\n')
+            f.write(row_heads[i] + ',' + str(spr.getrow(i).toarray()[0].tolist())[1:-1].replace(' ', '') + '\n')
 
 
 def get_data_from_files(file_name, file_row_head='genes.tsv', file_barcodes=None, isMtx=True):

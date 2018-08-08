@@ -14,6 +14,8 @@ def main():
     input_file = util.get_file("Select the file to be converted")
     mappings = util.get_file("Select the mapping")
 
+    s = time.time()
+
     convert_mappings.convert_mappings(input_file, mappings)
 
     npz_file = compress.compress_file(''.join(input_file.split('.')[:-1]) + '_converted.' + input_file.split('.')[-1])
@@ -47,6 +49,8 @@ def main():
     spr, row_head, _, output_file = convert_sparse_to_csv.get_data_from_files(dup_npz, dup_row, isMtx=False)
     convert_sparse_to_csv.sparse_to_csv(spr, row_head, output_file)
 
+    print(time.time() - s)
+
 
 def list_duplicates(seq):
     tally = defaultdict(list)
@@ -58,14 +62,14 @@ def list_duplicates(seq):
 #https://stackoverflow.com/questions/28427236/set-row-of-csr-matrix
 def set_row_csr(A, row_idx, new_row):
     assert sparse.isspmatrix_csr(A), 'A shall be a csr_matrix'
-    assert row_idx < A.shape[0],             'The row index ({0}) shall be smaller than the number of rows in A ({1})'             .format(row_idx, A.shape[0])
+    assert row_idx < A.shape[0], 'The row index ({0}) shall be smaller than the number of rows in A ({1})'             .format(row_idx, A.shape[0])
     try:
         N_elements_new_row = len(new_row)
     except TypeError:
         msg = 'Argument new_row shall be a list or numpy array, is now a {0}'        .format(type(new_row))
         raise AssertionError(msg)
     N_cols = A.shape[1]
-    assert N_cols == N_elements_new_row,             'The number of elements in new row ({0}) must be equal to '             'the number of columns in matrix A ({1})'             .format(N_elements_new_row, N_cols)
+    assert N_cols == N_elements_new_row, 'The number of elements in new row ({0}) must be equal to '             'the number of columns in matrix A ({1})'             .format(N_elements_new_row, N_cols)
 
     idx_start_row = A.indptr[row_idx]
     idx_end_row = A.indptr[row_idx + 1]
