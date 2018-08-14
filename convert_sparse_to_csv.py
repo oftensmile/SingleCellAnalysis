@@ -8,7 +8,6 @@ def sparse_to_csv(spr, row_heads, output_file):
         f.write('Index,' + str(list(range(1, spr.shape[1])))[1:-1].replace(' ', '') + '\n')
 
         for i in range(spr.shape[0]):
-            # f.write('#' + row_heads[i] + str(spr.getrow(i).toarray()[0].tolist())[1:-1].replace(' ', '') + '\n')
             f.write(row_heads[i] + ',' + str(spr.getrow(i).toarray()[0].tolist())[1:-1].replace(' ', '') + '\n')
 
 
@@ -58,7 +57,7 @@ def split_and_convert(spr, row_heads, barcodes, output_file='output'):
             sparse_mat = spr.tocsc()[:, splits[s]:]
         out = output_file + '_' + str(s+1) + '.csv'
         sparse_to_csv(sparse_mat, row_heads, out)
-        
+    
 
 def main():
     file_name = util.get_file("Select mtx or npz file")

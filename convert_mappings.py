@@ -1,5 +1,6 @@
 import time
 import util
+import save_row_head
 
 def convert_mappings(input_file, mappings_file, from_map_id=0, to_map_id=1):
     output_file = ''.join(input_file.split('.')[:-1]) + '_converted.' + input_file.split('.')[-1]
@@ -28,7 +29,7 @@ def convert_mappings(input_file, mappings_file, from_map_id=0, to_map_id=1):
                 except ValueError:
                     # output.write(row)
                     err += 1
-                    print(x[0])
+                    # print(x[0])
                     continue
     
     print(err)

@@ -46,6 +46,24 @@ def main():
 
     sparse.save_npz(dup_npz, mat)
     # convert_sparse_to_csv.npz_to_csv(dup_npz, dup_row)
+
+    # mapping = {}
+    # convert = {}
+    # with open(mappings) as mapp:
+    #     for i in mapp:
+    #         line = i.replace('\n', '').split(',')
+    #         mapping[line[0]] = 'hg38_' + line[1][1:]
+    #         convert['hg38_' + line[1][1:]] = []
+    #     for i in range(len(row_heads)):
+    #         temp = row_heads[i]
+    #         if temp in mapping:
+    #             convert[mapping[temp]].append(i)
+
+    # ord_mat = sparse.csr_matrix((mat.shape[0], mat.shape[1]))
+
+    # for gene in convert.keys():
+        
+
     spr, row_head, _, output_file = convert_sparse_to_csv.get_data_from_files(dup_npz, dup_row, isMtx=False)
     convert_sparse_to_csv.sparse_to_csv(spr, row_head, output_file)
 
@@ -62,14 +80,14 @@ def list_duplicates(seq):
 #https://stackoverflow.com/questions/28427236/set-row-of-csr-matrix
 def set_row_csr(A, row_idx, new_row):
     assert sparse.isspmatrix_csr(A), 'A shall be a csr_matrix'
-    assert row_idx < A.shape[0], 'The row index ({0}) shall be smaller than the number of rows in A ({1})'             .format(row_idx, A.shape[0])
+    assert row_idx < A.shape[0], 'The row index ({0}) shall be smaller than the number of rows in A ({1})'.format(row_idx, A.shape[0])
     try:
         N_elements_new_row = len(new_row)
     except TypeError:
         msg = 'Argument new_row shall be a list or numpy array, is now a {0}'        .format(type(new_row))
         raise AssertionError(msg)
     N_cols = A.shape[1]
-    assert N_cols == N_elements_new_row, 'The number of elements in new row ({0}) must be equal to '             'the number of columns in matrix A ({1})'             .format(N_elements_new_row, N_cols)
+    assert N_cols == N_elements_new_row, 'The number of elements in new row ({0}) must be equal to ' 'the number of columns in matrix A ({1})'             .format(N_elements_new_row, N_cols)
 
     idx_start_row = A.indptr[row_idx]
     idx_end_row = A.indptr[row_idx + 1]
