@@ -4,6 +4,7 @@ import util
 import time
 
 def sparse_to_csv(spr, row_heads, output_file):
+    spr = spr.tocsr()
     with open(output_file, 'w') as f:
         f.write('Index,' + str(list(range(1, spr.shape[1])))[1:-1].replace(' ', '') + '\n')
 
