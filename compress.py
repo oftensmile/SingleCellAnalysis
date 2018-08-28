@@ -27,7 +27,7 @@ def get_sparse(filename, start_index, end_index):
     return test
 
 
-def compress_file(fn):
+def compress_file(fn, save=True):
     filename = fn
     num_lines = sum(1 for line in open(filename, encoding='UTF-8'))
     dvide = multiprocessing.cpu_count()
@@ -53,8 +53,11 @@ def compress_file(fn):
     data = sparse.vstack(x)
     del res_l
     del x
-    sparse.save_npz(filename.split('.')[0] + '.npz',  data.tocsc())
-    return filename.split('.')[0] + '.npz'
+    if save:    
+        sparse.save_npz(filename.split('.')[0] + '.npz',  data.tocsc())
+        return filename.split('.')[0] + '.npz'
+    else:
+        return data.tocsc()
 
 
 def main():
