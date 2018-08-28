@@ -50,7 +50,7 @@ def get_genes_and_data(filename):
         test.append(temp)
 
     new_data  = sparse.vstack(test)
-    new_data = new_data.tocsc()
+    new_data = sparse.csc_matrix(new_data, dtype=int)
     genes = list(genename_index.keys())
 
     print(count)
@@ -59,6 +59,7 @@ def get_genes_and_data(filename):
 
 
 def save_csv(save_path, data, genes):
+    data = data.tocsr()
     with open(save_path + 'csv.csv', 'w') as f:
         for i in range(1, data.shape[1]+1):
             f.write(',%d' % i)
@@ -88,22 +89,21 @@ def save_mtx(save_path, data, genes, barcodes=None):
 
 def save_h5(save_path, data, genes, barcodes=None):
     if not barcodes:
-        barcodes = range(1, data.shape[1]+1)
+        barcodes = np.array(range(1, data.shape[1]+1), dtype='S')
 
-    hf = h5py.File(save_path + 'h5.h5', 'w')
-    group = hf.create_group('sct')
-    group.create_dataset('barcodes', barcodes)
-    group.create_dataset('gene_names', genes)
-    group.create_dataset('data', data.data)
-    group.create_dataset('indices', data.indices)
-    group.create_dataset('indptr', data.indptr)
-    group.create_dataset('shape', data.shape)
-    hf.close()
+    with h5py.File(save_path + 'h5.h5', 'w') as hf:
+        group = hf.create_group('sct')
+        group.create_dataset('barcodes', data=barcodes)
+        group.create_dataset('gene_names', data=np.array(genes, dtype='S'))
+        group.create_dataset('data', data=data.data)
+        group.create_dataset('indices', data=data.indices)
+        group.create_dataset('indptr', data=data.indptr)
+        group.create_dataset('shape', data=data.shape)
 
 
 def main(filename):
-    save_path = os.path.splitext('/'.join(filename.split('/')[:-1])+'/convert/'+filename.split('/')[-1])[0][:-3]
-
+    save_path = os.path.join(os.path.dirname(os.path.abspath(filename)), 'convert', os.path.splitext(os.path.split(filename)[1])[0][:-3])
+    print(save_path)
     s = time.time()
     genes, data = get_genes_and_data(filename)
     print(time.time() - s)
