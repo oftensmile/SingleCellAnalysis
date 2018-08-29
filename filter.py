@@ -22,13 +22,19 @@ def filter_data(mat, threshold):
     return filtered
 
 
-def main(mtx, gene_tsv):
+def main(mtx):
     
     save_path = os.path.join(os.path.dirname(os.path.abspath(mtx)), 'convert', os.path.splitext(os.path.split(mtx)[1])[0][:-3])
 
     mat = scipy.io.mmread(mtx)
     spr = filter_data(mat, 100)
-
+    if spr.shape[0] == 32738:
+        gene_tsv = 'hg19.csv'
+    elif spr.shape[0] == 32738:
+        gene_tsv = 'hg38.csv'
+    else:
+        print('ERROR************')
+        exit(1)
     with open(gene_tsv) as g:
         genes = list(map(lambda x: x.replace('\n', ''), g.readlines()))
 
@@ -39,7 +45,7 @@ def main(mtx, gene_tsv):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 3:
+    if len(sys.argv) != 1:
         print("usage: " + sys.argv[0] + " MTX_FILE.mtx GENE_NAMES.tsv")
         sys.exit(1)
-    main(sys.argv[1], sys.argv[2])
+    main('062_3K_human_PBMC_healthy_mtx.mtx')
