@@ -12,8 +12,8 @@ import sys
 def get_genes_and_data(filename):
     genes = save_row_head.return_row_head(filename)
     data = compress.compress_file(filename, save=False)
-    new_data = standardize(genes, data)
-    return genes, new_data
+    new_genes, new_data = standardize(genes, data)
+    return new_genes, new_data
 
 
 def standardize(genes, data):
@@ -106,13 +106,7 @@ def save_h5(save_path, data, genes, barcodes=None):
         group.create_dataset('shape', data=data.shape)
 
 
-def main(filename):
-    save_path = os.path.join(os.path.dirname(os.path.abspath(filename)), 'convert', os.path.splitext(os.path.split(filename)[1])[0][:-3])
-
-    s = time.time()
-    genes, data = get_genes_and_data(filename)
-    print(time.time() - s)
-    
+def save_all(save_path, data, genes):
     s = time.time()
     sparse.save_npz(save_path + 'npz.npz',  data)
     print(time.time() - s)
@@ -128,6 +122,15 @@ def main(filename):
     s = time.time()
     save_h5(save_path, data, genes)
     print(time.time() - s)
+
+def main(filename):
+    save_path = os.path.join(os.path.dirname(os.path.abspath(filename)), 'convert', os.path.splitext(os.path.split(filename)[1])[0][:-3])
+    
+    s = time.time()
+    genes, data = get_genes_and_data(filename)
+    print(time.time() - s)
+    
+    save_all(save_path, data, genes)
 
 
 
