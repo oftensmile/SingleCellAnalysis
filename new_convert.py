@@ -8,10 +8,15 @@ import time
 import os
 import sys
 
+
 def get_genes_and_data(filename):
     genes = save_row_head.return_row_head(filename)
     data = compress.compress_file(filename, save=False)
+    new_data = standardize(genes, data)
+    return genes, new_data
 
+
+def standardize(genes, data):
     f = open('convert_mapping.csv')
     temp = f.readlines()
     ensg_genename = {}
@@ -103,7 +108,7 @@ def save_h5(save_path, data, genes, barcodes=None):
 
 def main(filename):
     save_path = os.path.join(os.path.dirname(os.path.abspath(filename)), 'convert', os.path.splitext(os.path.split(filename)[1])[0][:-3])
-    print(save_path)
+
     s = time.time()
     genes, data = get_genes_and_data(filename)
     print(time.time() - s)
