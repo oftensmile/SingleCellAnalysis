@@ -10,60 +10,6 @@ import sys
 import util
 
 
-def get_genes_and_data(filename):
-    genes = row_head.return_row_head(filename)
-    data = compress.compress_file(filename, save=False)
-    new_genes, new_data = standardize(genes, data)
-    return new_genes, new_data
-
-
-def standardize(genes, data):
-    f = open('convert_mapping.csv')
-    temp = f.readlines()
-    ensg_genename = {}
-    genename_index = {}
-    for i in temp:
-        line = i.replace('\n', '').split(',')
-        ensg_genename[line[0]] = 'hg38_' + line[1][1:]
-        genename_index['hg38_' + line[1][1:]] = []
-        
-    rest = {}
-    for i in range(len(genes)):
-        temp = genes[i]
-        if temp in ensg_genename:
-            genename_index[ensg_genename[temp]].append(i)
-        else:
-            rest[temp] = i
-
-    print('Building sparse matrix...')
-    long = data.shape[1]
-    test = []
-    count = 0
-    for i in genename_index.keys():
-        if len(genename_index[i])==0:
-            count+=1
-            temp = np.zeros(long)
-            temp = sparse.csr_matrix(temp, dtype=np.int32)
-            temp.eliminate_zeros()
-        elif len(genename_index[i])==1:
-            temp = data.getrow(genename_index[i][0])
-        else:
-            temp = data.getrow(genename_index[i][0]).toarray()
-            for x in genename_index[i][1:]:
-                temp += data.getrow(x).toarray()
-            temp = sparse.csr_matrix(temp, dtype=np.int32)
-            temp.eliminate_zeros()
-        test.append(temp)
-
-    new_data  = sparse.vstack(test)
-    new_data = sparse.csc_matrix(new_data, dtype=np.int32)
-    genes = list(genename_index.keys())
-
-    print(count)
-
-    return genes, new_data
-
-
 def save_csv(save_path, data, genes):
     data = data.tocsr()
     with open(save_path + 'csv.csv', 'w') as f:
@@ -131,23 +77,3 @@ def save_all(save_path, data, genes):
     s = time.time()
     save_h5(save_path, data, genes)
     print(time.time() - s)
-
-def main(filename):
-    save_path = os.path.join(os.path.dirname(os.path.abspath(filename)), 'convert', os.path.splitext(os.path.split(filename)[1])[0][:-3])
-    
-    s = time.time()
-    genes, data = get_genes_and_data(filename)
-    print(time.time() - s)
-
-    save_all(save_path, data, genes)
-
-
-
-
-if __name__ == '__main__':
-    # if len(sys.argv) != 2:
-    #     print("usage: " + sys.argv[0] + " FILENAME")
-    #     sys.exit(1)
-    # main(sys.argv[1])
-    f = util.get_file()
-    main(f)

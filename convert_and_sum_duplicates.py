@@ -2,7 +2,7 @@ import util
 import time
 import convert_mappings
 import compress
-import save_row_head
+import row_head
 import convert_sparse_to_csv
 import scipy
 from scipy import sparse
@@ -19,7 +19,7 @@ def main():
     convert_mappings.convert_mappings(input_file, mappings)
 
     npz_file = compress.compress_file(''.join(input_file.split('.')[:-1]) + '_converted.' + input_file.split('.')[-1])
-    rh_file = save_row_head.save_row_head(''.join(input_file.split('.')[:-1]) + '_converted.' + input_file.split('.')[-1])
+    rh_file = row_head.save_row_head(''.join(input_file.split('.')[:-1]) + '_converted.' + input_file.split('.')[-1])
 
     with open(rh_file) as h:
         row_heads = list(map(lambda x: x.replace('\n', ''), h.readlines()))

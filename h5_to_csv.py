@@ -18,7 +18,8 @@ def h5_to_csv(input_file):
 
     row_heads = get_list(d['gene_names'])
     barcodes = get_list(d['barcodes'])
-    convert_sparse_to_csv.split_and_convert(spr, row_heads, barcodes, output_file)
+    # convert_sparse_to_csv.split_and_convert(spr, row_heads, barcodes, output_file)
+    convert_sparse_to_csv.sparse_to_csv(spr, row_heads, output_file)
 
 
 def main():

@@ -31,7 +31,7 @@ def get_data_from_files(file_name, file_row_head='genes.tsv', file_barcodes=None
 
     with open(file_row_head) as rh:
         if isMtx:
-            row_heads = list(map(lambda x: x.replace('\n', '').split('\t')[1], rh.readlines()))
+            row_heads = list(map(lambda x: x.replace('\n', '').split('\t')[0], rh.readlines()))
         else:
             row_heads = list(map(lambda x: x.replace('\n', ''), rh.readlines()))
 
@@ -68,11 +68,12 @@ def main():
         isMtx = False
 
     file_row_head = util.get_file("Select gene names")
-    file_barcodes = util.get_file("Select barcodes file")
+    # file_barcodes = util.get_file("Select barcodes file")
 
-    spr, row_heads, barcodes, output_file = get_data_from_files(file_name, file_row_head, file_barcodes, isMtx)
+    spr, row_heads, barcodes, output_file = get_data_from_files(file_name, file_row_head, None, isMtx)
 
-    split_and_convert(spr, row_heads, barcodes, output_file)
+    # split_and_convert(spr, row_heads, barcodes, output_file)
+    sparse_to_csv(spr, row_heads, output_file)
 
 if __name__ == '__main__':
     main()

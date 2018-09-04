@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 
 import numpy as np
 import scipy.io
@@ -27,7 +28,8 @@ def main(mtx):
     save_path = os.path.join(os.path.dirname(os.path.abspath(mtx)), 'convert', os.path.splitext(os.path.split(mtx)[1])[0][:-3])
 
     mat = scipy.io.mmread(mtx)
-    spr = filter_data(mat, 100)
+    # spr = filter_data(mat, 100)
+    spr = mat
     if spr.shape[0] == 32738:
         gene_tsv = 'hg19.csv'
     elif spr.shape[0] == 33694:
@@ -48,4 +50,7 @@ if __name__ == '__main__':
     if len(sys.argv) != 2:
         print("usage: " + sys.argv[0] + " MTX_FILE.mtx")
         sys.exit(1)
+    
+    s = time.time()
     main(sys.argv[1])
+    print(time.time()-s)
