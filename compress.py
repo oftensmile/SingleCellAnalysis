@@ -9,6 +9,17 @@ import util
 
 
 def get_sparse(filename, start_index, end_index):
+    '''Generates the sparse matrix from the CSV file in the range of line start_index to line end_index-1 
+    
+    Arguments:
+        filename {string} -- Path of CSV file
+        start_index {int} -- The starting line number from CSV file for sparse matrix
+        end_index {int} -- The (last line number + 1) from CSV file for sparse matrix
+    
+    Returns:
+        scipy.sparse.csr_matrix -- The compressed sparse matrix generated from data read from CSV file
+    '''
+
     test = []
     period = 1000
     with open(filename, encoding = 'UTF-8') as content:
@@ -28,6 +39,19 @@ def get_sparse(filename, start_index, end_index):
 
 
 def compress_file(fn, save=True):
+    '''Compresses a CSV file to scipy.sparse matrix
+    
+    Arguments:
+        fn {string} -- Path of CSV file
+    
+    Keyword Arguments:
+        save {bool} -- Determines whether the file should be saved to disk (.npz file) (default: {True})
+    
+    Returns:
+        [string, scipy.sparse.csr_matrix] -- Return the path of saved file if save=True, 
+                                             else returns the compressed scipy.sparse csr matrix.
+    ''' 
+    
     filename = fn
     num_lines = sum(1 for line in open(filename, encoding='UTF-8'))
     dvide = multiprocessing.cpu_count()
@@ -59,22 +83,4 @@ def compress_file(fn, save=True):
     else:
         return data.tocsc()
 
-
-def main():
-    fn = util.get_file()
-    num = 1
-    print('num', num)
-    s = time.time()
-    l = time.time()
-    for _ in range(num):
-        compress_file(fn)
-        print(time.time() - l)
-        l = time.time()
-    e = time.time()
-
-    print('average time', (e-s)/num)
-    print('total time', e-s)
-
-if __name__ == '__main__':
-    main()
 

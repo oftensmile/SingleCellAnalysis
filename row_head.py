@@ -1,4 +1,5 @@
 def save_row_head(file):
+    '''Saves the row head(gene names / ENSG) from CSV file'''
     with open(file) as f:
         data = f.readlines()
         data = data[1:]
@@ -12,6 +13,7 @@ def save_row_head(file):
     return file.split('.')[0] + '_row.txt'
 
 def return_row_head(file):
+    '''Returns the row head(gene names / ENSG) from CSV file'''
     with open(file) as f:
         data = f.readlines()
         data = data[1:]

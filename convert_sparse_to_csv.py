@@ -1,9 +1,9 @@
 import scipy.sparse as sp
 import scipy.io
 import util
-import time
 
 def sparse_to_csv(spr, row_heads, output_file):
+    
     spr = spr.tocsr()
     with open(output_file, 'w') as f:
         f.write('Index,' + str(list(range(1, spr.shape[1])))[1:-1].replace(' ', '') + '\n')
@@ -58,7 +58,7 @@ def split_and_convert(spr, row_heads, barcodes, output_file='output'):
             sparse_mat = spr.tocsc()[:, splits[s]:]
         out = output_file + '_' + str(s+1) + '.csv'
         sparse_to_csv(sparse_mat, row_heads, out)
-    
+
 
 def main():
     file_name = util.get_file("Select mtx or npz file")
@@ -68,12 +68,12 @@ def main():
         isMtx = False
 
     file_row_head = util.get_file("Select gene names")
-    # file_barcodes = util.get_file("Select barcodes file")
+    file_barcodes = util.get_file("Select barcodes file")
 
-    spr, row_heads, barcodes, output_file = get_data_from_files(file_name, file_row_head, None, isMtx)
+    spr, row_heads, barcodes, output_file = get_data_from_files(file_name, file_row_head, file_barcodes, isMtx)
 
-    # split_and_convert(spr, row_heads, barcodes, output_file)
-    sparse_to_csv(spr, row_heads, output_file)
+    split_and_convert(spr, row_heads, barcodes, output_file)
+    # sparse_to_csv(spr, row_heads, output_file)
 
 if __name__ == '__main__':
     main()

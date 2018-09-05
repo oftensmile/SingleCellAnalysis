@@ -9,6 +9,7 @@ from scipy import sparse
 import numpy as np
 from collections import defaultdict
 
+'''This file is depricated. Do not use.'''
 
 def main():
     input_file = util.get_file("Select the file to be converted")
@@ -45,27 +46,9 @@ def main():
         h.write(str(row_heads)[1:-1].replace('\'', '').replace(', ', '\n'))
 
     sparse.save_npz(dup_npz, mat)
-    # convert_sparse_to_csv.npz_to_csv(dup_npz, dup_row)
 
-    # mapping = {}
-    # convert = {}
-    # with open(mappings) as mapp:
-    #     for i in mapp:
-    #         line = i.replace('\n', '').split(',')
-    #         mapping[line[0]] = 'hg38_' + line[1][1:]
-    #         convert['hg38_' + line[1][1:]] = []
-    #     for i in range(len(row_heads)):
-    #         temp = row_heads[i]
-    #         if temp in mapping:
-    #             convert[mapping[temp]].append(i)
-
-    # ord_mat = sparse.csr_matrix((mat.shape[0], mat.shape[1]))
-
-    # for gene in convert.keys():
-        
-
-    spr, row_head, _, output_file = convert_sparse_to_csv.get_data_from_files(dup_npz, dup_row, isMtx=False)
-    convert_sparse_to_csv.sparse_to_csv(spr, row_head, output_file)
+    spr, rh, _, output_file = convert_sparse_to_csv.get_data_from_files(dup_npz, dup_row, isMtx=False)
+    convert_sparse_to_csv.sparse_to_csv(spr, rh, output_file)
 
     print(time.time() - s)
 

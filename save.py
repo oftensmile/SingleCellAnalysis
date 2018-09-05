@@ -1,13 +1,7 @@
-import numpy as np
 import h5py
-from scipy import sparse
+import numpy as np
 import scipy.io
-import compress
-import row_head
-import time
-import os
-import sys
-import util
+from scipy import sparse
 
 
 def save_csv(save_path, data, genes):
@@ -39,7 +33,7 @@ def save_mtx(save_path, data, genes, barcodes=None):
                 f.write(str(i) + '\n')
 
 
-def save_h5(save_path, data, genes, barcodes=None, compression_level=None):
+def save_h5(save_path, data, genes, barcodes=None, compression_level=4):
     if not barcodes:
         barcodes = np.array(range(1, data.shape[1]+1), dtype='S')
 
@@ -52,28 +46,10 @@ def save_h5(save_path, data, genes, barcodes=None, compression_level=None):
             group.create_dataset('indices', data=data.indices, compression="gzip", compression_opts=compression_level)
             group.create_dataset('indptr', data=data.indptr, compression="gzip", compression_opts=compression_level)
             group.create_dataset('shape', data=data.shape, compression="gzip", compression_opts=compression_level)
-        else:
-            group.create_dataset('barcodes', data=barcodes)
-            group.create_dataset('gene_names', data=np.array(genes, dtype='S'))
-            group.create_dataset('data', data=data.data)
-            group.create_dataset('indices', data=data.indices)
-            group.create_dataset('indptr', data=data.indptr)
-            group.create_dataset('shape', data=data.shape)
 
 
 def save_all(save_path, data, genes):
-    s = time.time()
     sparse.save_npz(save_path + 'npz.npz',  data)
-    print(time.time() - s)
-
-    s = time.time()
     save_csv(save_path, data, genes)
-    print(time.time() - s)
-
-    s = time.time()
     save_mtx(save_path, data, genes)
-    print(time.time() - s)
-
-    s = time.time()
     save_h5(save_path, data, genes)
-    print(time.time() - s)

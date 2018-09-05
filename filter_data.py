@@ -1,17 +1,19 @@
-import os
-import sys
-import time
-
 import numpy as np
-import scipy.io
 from scipy import sparse as sp
 
-import new_convert as nc
-
-
 def filter_data(mat, threshold):
+    '''Select the columns in the matrix where the number of positives is greater than the threshold.
+    
+    Arguments:
+        mat {scipy.sparse} -- The matrix that is to be filtered
+        threshold {int} -- The threshold for filtering
+    
+    Returns:
+        scipy.sparse.csc_matrix -- The filtered matrix
+    '''
+
     mat = mat.tocsc()
-    sumcol = np.squeeze(np.array(mat.sum(axis=0)))
+    sumcol = np.squeeze(np.array((mat>0).sum(axis=0)))
     columns, = np.where(sumcol > threshold)
 
     cols = []
@@ -21,36 +23,3 @@ def filter_data(mat, threshold):
     filtered = sp.hstack(cols)
 
     return filtered
-
-
-def main(mtx):
-    
-    save_path = os.path.join(os.path.dirname(os.path.abspath(mtx)), 'convert', os.path.splitext(os.path.split(mtx)[1])[0][:-3])
-
-    mat = scipy.io.mmread(mtx)
-    # spr = filter_data(mat, 100)
-    spr = mat
-    if spr.shape[0] == 32738:
-        gene_tsv = 'hg19.csv'
-    elif spr.shape[0] == 33694:
-        gene_tsv = 'hg38.csv'
-    else:
-        print('ERROR************')
-        exit(1)
-    with open(gene_tsv) as g:
-        genes = list(map(lambda x: x.replace('\n', '').split(',')[0], g.readlines()))
-
-    new_genes, new_data = nc.standardize(genes, spr)
-    nc.save_all(save_path, new_data, new_genes)
-
-
-
-
-if __name__ == '__main__':
-    if len(sys.argv) != 2:
-        print("usage: " + sys.argv[0] + " MTX_FILE.mtx")
-        sys.exit(1)
-    
-    s = time.time()
-    main(sys.argv[1])
-    print(time.time()-s)

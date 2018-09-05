@@ -4,6 +4,15 @@ import time
 import util
 
 def corr_coef(sp_mat):
+    '''Calculates the correlation coefficient of the given matrix
+    
+    Arguments:
+        sp_mat {scipy.sparse} -- The sparse matrix whose correlation coefficient is to be calculated
+    
+    Returns:
+        numpy.array -- The correlation coefficient of the matrix
+    '''
+
     n = sp_mat.shape[1]
     C = ((sp_mat.T*sp_mat -(sum(sp_mat).T*sum(sp_mat)/n))).todense()
     V = np.sqrt(np.mat(np.diag(C)).T*np.mat(np.diag(C)))

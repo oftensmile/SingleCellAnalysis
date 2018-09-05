@@ -17,8 +17,6 @@ def h5_to_csv(input_file):
     spr = csc_matrix((d['data'][()], d['indices'][()], d['indptr'][()]), shape=tuple(d['shape'][()]))
 
     row_heads = get_list(d['gene_names'])
-    barcodes = get_list(d['barcodes'])
-    # convert_sparse_to_csv.split_and_convert(spr, row_heads, barcodes, output_file)
     convert_sparse_to_csv.sparse_to_csv(spr, row_heads, output_file)
 
 
