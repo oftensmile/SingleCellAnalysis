@@ -1,6 +1,13 @@
-import scipy.sparse as sp
+#!/usr/bin/env python
 import scipy.io
+import scipy.sparse as sp
+
 import util
+
+__author__ = "Razin Shaikh and Minjie Lyu"
+__credits__ = ["Razin Shaikh", "Minjie Lyu", "Vladimir Brusic"]
+__version__ = "1.0"
+__status__ = "Prototype"
 
 def sparse_to_csv(spr, row_heads, output_file):
     

@@ -1,9 +1,14 @@
+#!/usr/bin/env python
 import numpy as np
 from scipy import sparse as sp
 import util
 
-GENE_TO_ENSG = 'hg19_hg38.csv'
+__author__ = "Razin Shaikh and Minjie Lyu"
+__credits__ = ["Razin Shaikh", "Minjie Lyu", "Vladimir Brusic"]
+__version__ = "1.0"
+__status__ = "Prototype"
 
+GENE_TO_ENSG = 'hg19_hg38.csv'
 
 def standardize(genes, data, mappings):
     '''

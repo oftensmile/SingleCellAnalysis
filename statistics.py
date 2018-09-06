@@ -1,11 +1,17 @@
-from scipy import sparse
-import numpy as np
+#!/usr/bin/env python
 import os
+
+import numpy as np
 import scipy.io
+from scipy import sparse
 
 import compress
 import util
 
+__author__ = "Razin Shaikh and Minjie Lyu"
+__credits__ = ["Razin Shaikh", "Minjie Lyu", "Vladimir Brusic"]
+__version__ = "1.0"
+__status__ = "Prototype"
 
 def range_num_row(data, gt = 0, lt = None):
     if(lt):

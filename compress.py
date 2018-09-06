@@ -1,11 +1,18 @@
-import numpy as np
-import time
-from scipy import sparse
-from multiprocessing import Pool
+#!/usr/bin/env python
 import multiprocessing
 import os
+import time
+from multiprocessing import Pool
+
+import numpy as np
+from scipy import sparse
+
 import util
 
+__author__ = "Razin Shaikh and Minjie Lyu"
+__credits__ = ["Razin Shaikh", "Minjie Lyu", "Vladimir Brusic"]
+__version__ = "1.0"
+__status__ = "Prototype"
 
 def get_sparse(filename, start_index, end_index):
     '''Generates the sparse matrix from the CSV file in the range of line start_index to line end_index-1 
@@ -81,5 +88,3 @@ def compress_file(fn, save=True):
         return filename.split('.')[0] + '.npz'
     else:
         return data.tocsc()
-
-

@@ -1,8 +1,15 @@
-import numpy as np
-from scipy.sparse import csr_matrix, csc_matrix
+#!/usr/bin/env python
 import h5py
+import numpy as np
+from scipy.sparse import csc_matrix, csr_matrix
+
 import convert_sparse_to_csv
 import util
+
+__author__ = "Razin Shaikh and Minjie Lyu"
+__credits__ = ["Razin Shaikh", "Minjie Lyu", "Vladimir Brusic"]
+__version__ = "1.0"
+__status__ = "Prototype"
 
 def get_list(l):
     return list(map(lambda x: x.decode('utf-8'), list(l)))

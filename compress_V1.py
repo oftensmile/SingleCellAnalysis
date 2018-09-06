@@ -1,10 +1,17 @@
-import time
-from scipy import sparse
+#!/usr/bin/env python
 import multiprocessing
-from multiprocessing import Pool
 import os
+import time
+from multiprocessing import Pool
+
+from scipy import sparse
+
 import util
 
+__author__ = "Razin Shaikh and Minjie Lyu"
+__credits__ = ["Razin Shaikh", "Minjie Lyu", "Vladimir Brusic"]
+__version__ = "1.0"
+__status__ = "Prototype"
 
 def get_data2(content):
     indptr = [0]

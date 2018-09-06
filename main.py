@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import os
 import sys
 
@@ -11,6 +12,11 @@ import filter_data
 import row_head
 import save
 import util
+
+__author__ = "Razin Shaikh and Minjie Lyu"
+__credits__ = ["Razin Shaikh", "Minjie Lyu", "Vladimir Brusic"]
+__version__ = "1.0"
+__status__ = "Prototype"
 
 ENSG_TO_GENE = 'convert_mapping.csv'
 
@@ -27,9 +33,10 @@ def get_matrix_and_genes(filename):
 
     ext = os.path.splitext(filename)[1]
     if ext == '.h5':
-        tmp = filename.get(list(filename.keys())[0])
+        f = h5py.File(filename)
+        tmp = f.get(list(f.keys())[0])
         matrix = sp.csc_matrix((tmp['data'][()], tmp['indices'][()], tmp['indptr'][()]), shape=tuple(tmp['shape'][()]))
-        genes = list(map(lambda x: x.decode('utf-8'), list(tmp['barcodes'])))
+        genes = list(map(lambda x: x.decode('utf-8'), list(tmp['genes'])))
     elif ext == '.csv':
         matrix = compress.compress_file(filename, save=False)
         genes = row_head.return_row_head(filename)

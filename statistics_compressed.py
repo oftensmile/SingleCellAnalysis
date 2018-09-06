@@ -1,7 +1,13 @@
+#!/usr/bin/env python
 import time
+
 import numpy as np
 from scipy import sparse
 
+__author__ = "Razin Shaikh and Minjie Lyu"
+__credits__ = ["Razin Shaikh", "Minjie Lyu", "Vladimir Brusic"]
+__version__ = "1.0"
+__status__ = "Prototype"
 
 def range_num(data, gt = 0, lt = None):
     if(lt):

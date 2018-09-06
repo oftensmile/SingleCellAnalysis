@@ -1,9 +1,14 @@
+#!/usr/bin/env python
 import time
-import numpy as np
-from scipy import sparse
 from multiprocessing import Pool
 
+import numpy as np
+from scipy import sparse
 
+__author__ = "Razin Shaikh and Minjie Lyu"
+__credits__ = ["Razin Shaikh", "Minjie Lyu", "Vladimir Brusic"]
+__version__ = "1.0"
+__status__ = "Prototype"
 
 def get_data(content):
     data = []
@@ -90,4 +95,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    

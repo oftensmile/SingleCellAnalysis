@@ -1,6 +1,13 @@
+#!/usr/bin/env python
+import os
+
 import numpy as np
 from scipy import sparse as sp
-import os
+
+__author__ = "Razin Shaikh and Minjie Lyu"
+__credits__ = ["Razin Shaikh", "Minjie Lyu", "Vladimir Brusic"]
+__version__ = "1.0"
+__status__ = "Prototype"
 
 def calculate(fn):
     spr = sp.load_npz(fn)
